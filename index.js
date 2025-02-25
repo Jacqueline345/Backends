@@ -14,12 +14,8 @@ app.use(cors({
   domains: '*',
   methods: "*"
 }));
-const { createUsuarios} = require('./controllers/teacherController');
+const { usuariosCreate} = require('./controllers/usuarioController');
 
-app.post('/usuarios', createUsuarios);
-//app.get("/teachers",teacherGet);
-//app.put('/teachers', teacherUpdate);
-//app.delete('/teachers', deleteTeacher);
-
+app.post('/usuarios', usuariosCreate);
 
 app.listen(3001, () => console.log(`Example app listening on port 3001!`))
