@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js"
   },
-  "author": "",
+  "author": "Andrea Benavides y Jacqueline Molina",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.3",
@@ -15,5 +15,14 @@
     "express": "^4.21.2",
     "mongoose": "^8.10.1",
     "nodemon": "^3.1.9"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jacqueline345/Backends.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jacqueline345/Backends/issues"
+  },
+  "homepage": "https://github.com/Jacqueline345/Backends#readme"
 }

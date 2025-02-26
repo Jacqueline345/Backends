@@ -58,6 +58,47 @@ function isAdult(nacimiento) {
     }
     return age >= 18;
 }
+
+/**
+ * Get all users
+ * @param {*} req 
+ * @param {*} res 
+ */
+const usuariosGet = (req, res) => {
+    const id = req.params.id;
+
+    if (id) {
+        // Obtener un usuario por ID
+        Usuarios.findById(id)
+            .then((usuario) => {
+                if (!usuario) {
+                    res.status(404).json({ message: 'Usuario no encontrado' });
+                } else {
+                    res.json(usuario);
+                }
+            })
+            .catch((err) => {
+                res.status(422).json({ error: 'Error al obtener el usuario' });
+                console.log('Error al obtener el usuario:', err);
+            });
+    } else {
+        // Obtener todos los usuarios
+        Usuarios.find()
+            .then((usuarios) => {
+                if (usuarios.length === 0) {
+                    res.status(404).json({ message: 'No se encontraron usuarios' });
+                } else {
+                    res.json(usuarios);
+                }
+            })
+            .catch((err) => {
+                res.status(422).json({ error: 'Error al obtener los usuarios' });
+                console.log('Error al obtener los usuarios:', err);
+            });
+    }
+}
+
 module.exports = {
-    usuariosCreate
+    usuariosCreate,
+    usuariosGet
 };
