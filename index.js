@@ -2,7 +2,13 @@ const express = require('express');
 const app = express();
 // database connection
 const mongoose = require("mongoose");
-const db = mongoose.connect("mongodb://127.0.0.1:27017/usuarios");
+
+mongoose.connect("mongodb://127.0.0.1:27017/usuarios", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("Conectado a MongoDB"))
+.catch(err => console.error("Error al conectar a MongoDB:", err));
 
 // parser for the request body (required for the POST and PUT methods)
 const bodyParser = require("body-parser");
@@ -14,8 +20,9 @@ app.use(cors({
   domains: '*',
   methods: "*"
 }));
-const { usuariosCreate} = require('./controllers/usuarioController');
+const { usuariosCreate, usuariosGet} = require('./controllers/usuarioController');
 
 app.post('/usuarios', usuariosCreate);
+app.get('/usuarios', usuariosGet);
 
 app.listen(3001, () => console.log(`Example app listening on port 3001!`))
