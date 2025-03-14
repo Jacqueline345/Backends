@@ -20,9 +20,10 @@ app.use(cors({
   domains: '*',
   methods: "*"
 }));
-const { usuariosCreate, usuariosGet} = require('./controllers/usuarioController');
-
+const { usuariosCreate, usuariosGet, UsuarioUpdate, deleteUsuario} = require('./controllers/usuarioController');
+   
 app.post('/usuarios', usuariosCreate);
 app.get('/usuarios', usuariosGet);
-
+app.patch('/usuarios', UsuarioUpdate);
+app.delete('/usuarios', deleteUsuario);
 app.listen(3001, () => console.log(`Example app listening on port 3001!`))
