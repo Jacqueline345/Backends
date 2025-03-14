@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "KidsTube",
     "collectionId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
-    "dateExported": "2025-03-13T20:55:26.491Z",
+    "dateExported": "2025-03-14T20:51:42.207Z",
     "version": "1.2",
     "folders": [],
     "requests": [
@@ -15,11 +15,11 @@
             "method": "POST",
             "sortNum": 10000,
             "created": "2025-02-26T19:29:43.626Z",
-            "modified": "2025-02-26T22:20:55.761Z",
+            "modified": "2025-03-14T17:18:22.982Z",
             "headers": [],
             "body": {
                 "type": "json",
-                "raw": "{\r\n  \"nombre\": \"Juan\",\r\n  \"apellidos\": \"Pérez\",\r\n  \"telefono\": 1234567890,\r\n  \"correos\": \"juan@example.com\",\r\n  \"nacimiento\": \"1990-01-01\",\r\n  \"pais\": \"México\",\r\n  \"contraseña\": \"miContraseñaSegura\",\r\n  \"pin\": \"123456\"\r\n}\r\n",
+                "raw": "{\n  \"nombre\": \"Andrea\",\n  \"apellidos\": \"Benavides\",\n  \"telefono\": 1234567890,\n  \"correos\": \"andrepaobena@gmail.com\",\n  \"nacimiento\": \"2003-12-12\",\n  \"pais\": \"Costa Rica\",\n  \"contraseña\": \"123\",\n  \"pin\": \"123456\"\n}\n",
                 "form": []
             }
         },
@@ -34,7 +34,41 @@
             "created": "2025-02-26T22:22:59.160Z",
             "modified": "2025-02-26T22:22:59.160Z",
             "headers": []
+        },
+        {
+            "_id": "7df82ba8-2442-477f-b9a6-b365e9310c7e",
+            "colId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
+            "containerId": "",
+            "name": "KidsTube-login",
+            "url": "http://localhost:3001/login",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2025-03-14T20:44:04.759Z",
+            "modified": "2025-03-14T20:44:04.759Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n    \"correo\": \"juan.perez@example.com\",\r\n    \"contraseña\": \"password123\"\r\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "7cbafa98-868f-4380-965d-70c0e1a3229b",
+            "colId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
+            "containerId": "",
+            "name": "KidsTube-logout",
+            "url": "http://localhost:3001/logout",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2025-03-14T20:48:46.815Z",
+            "modified": "2025-03-14T20:48:46.815Z",
+            "headers": [
+                {
+                    "name": "Key",
+                    "value": "application/json"
+                }
+            ]
         }
     ],
-    "ref": "qUkXAySbzOjspnph9Ojzx3IWRZHJViAzDYcB7uOkC2rcpDP2adcEHmjvted9hfqo9xBx9QO5Xh8tf3XRlBo39Q"
+    "ref": "qUkXAySbzOjspnph9Ojzx1cBGYpaUQsRVky5zt15RClLZjGoXaCgmtmkg868Lmj6_-YE3k7b7QNmnbqR1icfYg"
 }

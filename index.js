@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const path = require('path');
 // database connection
 const mongoose = require("mongoose");
 
@@ -20,10 +21,18 @@ app.use(cors({
   domains: '*',
   methods: "*"
 }));
-const { usuariosCreate, usuariosGet, UsuarioUpdate, deleteUsuario} = require('./controllers/usuarioController');
-   
+
+// Servir archivos estáticos
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+const { usuariosCreate, usuariosGet, UsuarioUpdate, deleteUsuario,} = require('./controllers/usuarioController');
+const {loginUsuario, logoutUsuario} = require('./controllers/authController');
+
 app.post('/usuarios', usuariosCreate);
 app.get('/usuarios', usuariosGet);
 app.patch('/usuarios', UsuarioUpdate);
 app.delete('/usuarios', deleteUsuario);
+app.post('/login', loginUsuario);
+app.post('/logout', logoutUsuario);
+
 app.listen(3001, () => console.log(`Example app listening on port 3001!`))
