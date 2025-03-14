@@ -39,7 +39,9 @@ Para comenzar a trabajar con este proyecto, sigue estos pasos:
     - https://github.com/Jacqueline345/Backends.git
 
 3. **Instalar Dependencias**:
-    - npm install
+    - npm install express
+    - npm install bcrypt
+    - npm install jsonwebtoken
 
 4. **Iniciar el Servidor**:
     - npm start

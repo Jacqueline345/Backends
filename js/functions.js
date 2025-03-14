@@ -1,7 +1,9 @@
 const usuarioModel = require("../model/usuarioModel");
+const bcrypt = require('bcrypt');
+const jwt =  require('jsonwebtoken');
 
 async function createUsuarios() {
-    let usuarios = {
+    let usuario = {
         nombre: document.getElementById('nombre').value,
         apellidos: document.getElementById('apellidos').value,
         telefono: document.getElementById('telefono').value,
@@ -20,13 +22,27 @@ async function createUsuarios() {
     });
 
     if (response && response.status == 201) {
-        usuarios = await response.json();
-        console.log('User saved', usuarios);
+        usuario = await response.json();
+        console.log('User saved', usuario);
         alert('Usuario guardado');
     } else {
         alert("Shit's on fire!");
     }
 }
+
+// Registro de usuario
+async function registerUsuario(req, res) {
+    try {
+        const { nombre, apellidos, telefono, correos, nacimiento, pais, contraseña, pin } = req.body;
+        const hashedPassword = await bcrypt.hash(contraseña, 10);
+        const usuario = new usuarioModel({ nombre, apellidos, telefono, correos, nacimiento, pais, contraseña: hashedPassword, pin });
+        await usuario.save();
+        res.status(201).json({ message: 'Usuario registrado exitosamente' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al registrar usuario', error });
+    }
+}
+
 function isAdult(nacimiento) {
     const today = new Date();
     const birthDate = new Date(nacimiento);
@@ -48,24 +64,29 @@ document.getElementById('registerForm').addEventListener('submit', function (eve
     }
 });
 
-async function login() {
-    let usuario = {
-        correo: document.getElementById('user').value,
-        contraseña: document.getElementById('password').value
+//Inicio sesión
+async function loginUsuario(req, res) {
+    const { correo, contraseña } = req.body;
+    const usuario = await usuarioModel.findOne({ correos: correo });
+    if (!usuario) {
+        return res.status(400).json({ message: 'Usuario no encontrado' });
     }
-    const response = await fetch('http://localhost:3001/usuarios', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(usuario)
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-        console.log("Login exitoso:", data);
-        alert("Login exitoso");
-    } else {
-        console.log("Error:", data.msg);
-        alert("Error: " + data.msg);
+    const isMatch = await bcrypt.compare(contraseña, usuario.contraseña);
+    if (!isMatch) {
+        return res.status(400).json({ message: 'Contraseña incorrecta' });
     }
+    const token = jwt.sign({ id: usuario._id }, 'secretKey', { expiresIn: '1h' });
+    res.status(200).json({ message: 'Login exitoso', token });
 }
+
+// Cierre de sesión
+function logoutUsuario(req, res) {
+    res.status(200).json({ message: 'Logout exitoso' });
+}
+
+module.exports = {
+    loginUsuario,
+    createUsuarios,
+    registerUsuario,
+    logoutUsuario
+};
