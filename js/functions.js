@@ -1,3 +1,5 @@
+const usuarioModel = require("../model/usuarioModel");
+
 async function createUsuarios() {
     let usuarios = {
         nombre: document.getElementById('nombre').value,
@@ -36,7 +38,7 @@ function isAdult(nacimiento) {
     return age >= 18;
 }
 
-document.getElementById('registerForm').addEventListener('submit', function(event) {
+document.getElementById('registerForm').addEventListener('submit', function (event) {
     const birthdate = document.getElementById('nacimiento').value;
 
     // Validación en el frontend
@@ -46,3 +48,24 @@ document.getElementById('registerForm').addEventListener('submit', function(even
     }
 });
 
+async function login() {
+    let usuario = {
+        correo: document.getElementById('user').value,
+        contraseña: document.getElementById('password').value
+    }
+    const response = await fetch('http://localhost:3001/usuarios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(usuario)
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        console.log("Login exitoso:", data);
+        alert("Login exitoso");
+    } else {
+        console.log("Error:", data.msg);
+        alert("Error: " + data.msg);
+    }
+}

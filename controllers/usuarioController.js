@@ -97,8 +97,85 @@ const usuariosGet = (req, res) => {
             });
     }
 }
+/**
+ * Updates a usuarios
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+
+const UsuarioUpdate = (req, res) => {
+    if (req.query && req.query.id) {
+        Usuarios.findById(req.query.id)
+            .then(usuarios => {
+                if (usuarios) {
+                    // Update the usuarios fields
+                    usuarios.nombre = req.body.nombre || usuarios.nombre;
+                    usuarios.apellidos = req.body.apellidos || usuarios.apellidos;
+                    usuarios.telefono = req.body.telefono || usuarios.telefono;
+                    usuarios.correos = req.body.correos || usuarios.correos;
+                    usuarios.nacimiento = req.body.nacimiento || usuarios.nacimiento;
+                    usuarios.pais = req.body.pais || usuarios.pais;
+                    usuarios.contraseña = req.body.contraseña || usuarios.contraseña;
+                    usuarios.pin = req.body.pin || usuarios.pin;
+                    usuarios.save()
+                        .then(() => {
+                            res.json(usuarios);
+                        })
+                        .catch((err) => {
+                            res.status(422);
+                            console.log('error while updating the users', err);
+                            res.json({
+                                error: 'There was an error updating the users'
+                            });
+                        });
+                } else {
+                    res.status(404);
+                    res.json({ error: 'User doesn\'t exist' });
+                }
+            })
+            .catch((err) => {
+                res.status(500);
+                console.log('error while querying the user', err);
+                res.json({ error: 'There was an error' });
+            });
+    } else {
+        res.status(422);
+        res.json({ error: 'No valid ID provided for user' });
+    }
+};
+
+/**
+ * Deletes a usuario
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+const deleteUsuario = (req, res) => {
+    if (req.query && req.query.id) {
+        Usuarios.findByIdAndDelete(req.query.id)
+            .then(usuarios => {
+                if (usuarios) {
+                    res.json({ message: 'User successfully deleted' });
+                } else {
+                    res.status(404);
+                    res.json({ error: 'User doesn\'t exist' });
+                }
+            })
+            .catch((err) => {
+                res.status(500);
+                console.log('error while querying the user', err);
+                res.json({ error: 'There was an error' });
+            });
+    } else {
+        res.status(422);
+        res.json({ error: 'No valid ID provided for user' });
+    }
+};
 
 module.exports = {
     usuariosCreate,
-    usuariosGet
+    usuariosGet,
+    UsuarioUpdate,
+    deleteUsuario
 };
