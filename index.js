@@ -1,3 +1,4 @@
+const Usuario = require('./model/usuarioModel'); // Asegúrate de ajustar la ruta
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -26,7 +27,7 @@ app.use(cors({
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 const { usuariosCreate, usuariosGet, UsuarioUpdate, deleteUsuario,} = require('./controllers/usuarioController');
-const {loginUsuario, logoutUsuario} = require('./controllers/authController');
+const {loginUsuario,logoutUsuario} = require('./controllers/authController');
 
 app.post('/usuarios', usuariosCreate);
 app.get('/usuarios', usuariosGet);
