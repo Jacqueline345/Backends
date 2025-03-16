@@ -10,7 +10,7 @@ async function loginUsuario(req, res) {
         if (!usuario) {
             return res.status(400).json({ message: 'Usuario no encontrado' });
         }
-        const isMatch = await bcrypt.compare(contraseña, usuario.contraseña);
+        const isMatch = contraseña == usuario.contraseña;
         if (!isMatch) {
             return res.status(400).json({ message: 'Contraseña incorrecta' });
         }
