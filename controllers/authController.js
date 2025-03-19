@@ -26,7 +26,9 @@ function logoutUsuario(req, res) {
     res.status(200).json({ message: 'Logout exitoso' });
 }
 
+
+
 module.exports = {
     loginUsuario,
-    logoutUsuario
+    logoutUsuario,
 };
