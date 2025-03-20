@@ -13,9 +13,10 @@
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
+    "ejs": "^3.1.10",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.10.1",
+    "mongoose": "^8.12.1",
     "nodemon": "^3.1.9"
   },
   "repository": {
@@ -25,5 +26,7 @@
   "bugs": {
     "url": "https://github.com/Jacqueline345/Backends/issues"
   },
-  "homepage": "https://github.com/Jacqueline345/Backends#readme"
+  "homepage": "https://github.com/Jacqueline345/Backends#readme",
+  "keywords": [],
+  "devDependencies": {}
 }
