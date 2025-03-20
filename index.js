@@ -30,6 +30,7 @@ const { loginUsuario, logoutUsuario, validateAdminPin } = require('./controllers
 const usuarioModel = require('./model/usuarioModel');
 const { restringidoCreate, restringidoGet, restringidoUpdate, restringidoDelete } = require('./controllers/restringidoController');
 const restringidoModel = require('./model/restringidoModel');
+const { playlistCreate, playlistGet, playlistUpdate, playlistDelete } = require('./controllers/playlistController');
 
 app.post('/usuarios', usuariosCreate);
 app.get('/usuarios', usuariosGet);
@@ -138,6 +139,10 @@ app.put('/restringido/:id', async (req, res) => {
     res.status(500).json({ message: "Error interno del servidor" });
   }
 });
+app.post('/playlist', playlistCreate);
+app.get('/playlist', playlistGet);
+app.patch('/playlist', playlistUpdate);
+app.delete('/playlist', playlistDelete);
 
 
 app.listen(3001, () => console.log(`Example app listening on port 3001!`))
