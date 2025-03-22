@@ -32,6 +32,7 @@ const usuarioModel = require('./model/usuarioModel');
 const { restringidoCreate, restringidoGet, restringidoUpdate, restringidoDelete } = require('./controllers/restringidoController');
 const restringidoModel = require('./model/restringidoModel');
 const { playlistCreate, playlistGet, playlistUpdate, playlistDelete } = require('./controllers/playlistController');
+const { buscarVideos } = require('./controllers/buscarController');
 const playlist = require('./model/playlist');
 
 app.post('/usuarios', usuariosCreate);
@@ -145,6 +146,9 @@ app.post('/playlist', playlistCreate);
 app.get('/playlist', playlistGet);
 app.patch('/playlist', playlistUpdate);
 app.delete('/playlist', playlistDelete);
+
+//Ruta para buscar Videos
+app.get('/buscar', buscarVideos);
 
 app.delete('/playlist/:id', async (req, res) => {
   try {
