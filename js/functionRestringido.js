@@ -2,18 +2,12 @@
 function obtenerIDDesdeURL() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id'); // Extrae el ID del query string
-    console.log("ID obtenido desde la URL:", id); // Verificar que el ID se obtiene correctamente
     return id;
 }
 
 // Cargar datos del usuario y rellenar los inputs
 async function cargarDatosUsuario() {
     const id = obtenerIDDesdeURL();
-    if (!id) {
-        alert("No se encontró el ID del usuario en la URL.");
-        return;
-    }
-
     try {
         const response = await fetch(`http://localhost:3001/restringido/${id}`);
         const usuario = await response.json();
@@ -21,7 +15,7 @@ async function cargarDatosUsuario() {
         console.log("Datos recibidos del usuario:", usuario); // Verifica la respuesta de la API
 
         if (!response.ok) {
-            throw new Error(usuario.message || "Error al obtener los datos.");
+            throw new Error(usuario.message);
         }
 
         // Verificar que los elementos existen antes de asignar valores
@@ -34,7 +28,6 @@ async function cargarDatosUsuario() {
 
     } catch (error) {
         console.error("Error al cargar datos:", error);
-        alert("Error al cargar los datos del usuario.");
     }
 }
 

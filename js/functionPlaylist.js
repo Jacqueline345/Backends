@@ -1,22 +1,3 @@
-const playlist = require("../model/playlist");
-
-function assignEditEvents() {
-    document.querySelectorAll('.edit_button').forEach(button => {
-        button.addEventListener('click', (event) => {
-            event.preventDefault(); // Evita la recarga de la página
-
-            const id = button.getAttribute('data-id'); // Obtener el ID del atributo correcto
-
-            if (!id) {
-                console.error("No se encontró el ID en el botón de edición.");
-                return;
-            }
-
-            console.log("Redirigiendo con ID:", id); // Verifica que el ID se obtiene correctamente
-            window.location.href = `editPlaylist.html?id=${id}`;
-        });
-    });
-}
 async function playlistPost() {
     let playlist = {
         nombre_playlist: document.getElementById('nombre_playlist').value,
@@ -39,6 +20,24 @@ async function playlistPost() {
     } else {
         alert("Shit's on fire");
     }
+}
+function assignEditEvents() {
+    document.querySelectorAll('.edit_button').forEach(button => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault(); // Evita la recarga de la página
+
+            const id = button.getAttribute('data-id'); // Obtener el ID del atributo correcto
+
+            if (!id) {
+                console.error("No se encontró el ID en el botón de edición.");
+                return;
+            }
+
+            console.log("Redirigiendo con ID:", id); // Verifica que el ID se obtiene correctamente
+            window.location.href = `editPlaylist.html?id=${id}`;
+
+        });
+    });
 }
 
 async function playGet() {
@@ -81,7 +80,7 @@ function assignDeleteEvents() {
 
             if (confirm("¿Estás seguro de que quieres eliminar este registro?")) {
                 try {
-                    const response = await fetch(`http://localhost:3001/restringido/${id}`, {
+                    const response = await fetch(`http://localhost:3001/playlist/${id}`, {
                         method: 'DELETE'
                     });
 
@@ -89,7 +88,7 @@ function assignDeleteEvents() {
 
                     if (response.ok) {
                         alert('Registro eliminado');
-                        restringidoGet(); // Recargar la lista
+                        playGet(); // Recargar la lista
                     } else {
                         console.error("Error en la respuesta del servidor:", result);
                         alert(`Error al eliminar: ${result.message || 'No se pudo eliminar'}`);
@@ -135,10 +134,76 @@ function assignSelectEvents() {
         });
     });
 }
+// Obtener el ID desde la URL
+function obtenerIDDesdeURL() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id'); // Extrae el ID del query string
+    return id;
+}
+
+// Cargar datos del usuario y rellenar los inputs
+async function cargarDatos() {
+    const id = obtenerIDDesdeURL();
+
+    try {
+        const response = await fetch(`http://localhost:3001/playlist/${id}`);
+        const play = await response.json();
+
+        console.log("Datos recibidos del playlist:", play); // Verifica la respuesta de la API
+
+        if (!response.ok) {
+            throw new Error(play.message);
+        }
+
+        // Verificar que los elementos existen antes de asignar valores
+        document.getElementById('nombre_playlist').value = play.nombre_playlist || "";
+        document.getElementById('perfiles_asociados').value = play.perfiles_asociados || "";
+
+        document.getElementById('editId').value = play._id || ""; // Guardar el ID oculto
+
+    } catch (error) {
+        console.error("Error al cargar datos:", error);
+    }
+}
+
+// Llamar a la función al cargar la página
+document.addEventListener('DOMContentLoaded', cargarDatos);
+
+
+async function playlistUpdate() {
+    let playlist = {
+        nombre_playlist: document.getElementById('nombre_playlist').value,
+        perfiles_asociados: document.getElementById('perfiles_asociados').value
+    }
+
+    const id = document.getElementById('editId').value; // Obtener el ID del campo oculto
+    try {
+        const response = await fetch(`http://localhost:3001/playlist/${id}`, { // Pasar el ID en la URL
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(playlist)
+        });
+
+        if (response.ok) {
+            const updatedPlay = await response.json();
+            console.log('Playlist actualizado', updatedPlay);
+            alert('Playlist actualizado correctamente');
+            window.location.href = "playlist.html";  // Aquí va la URL a la que deseas redirigir
+
+        } else {
+            const errorMessage = await response.text();
+        }
+    } catch (error) {
+        console.error('Error al actualizar la playlist:', error);
+    }
+}
 
 module.exports = {
     playlistPost,
     playGet,
-    usuariosGet
+    usuariosGet,
+    playlistUpdate
 };
 
