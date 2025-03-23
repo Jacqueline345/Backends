@@ -40,4 +40,3 @@ async function cargarDatosUsuario() {
 
 // Llamar a la función al cargar la página
 document.addEventListener('DOMContentLoaded', cargarDatosUsuario);
-ñ

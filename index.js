@@ -32,6 +32,7 @@ const { restringidoCreate, restringidoGet, restringidoUpdate, restringidoDelete 
 const restringidoModel = require('./model/restringidoModel');
 const { playlistCreate, playlistGet, playlistUpdate, playlistDelete } = require('./controllers/playlistController');
 const { buscarVideos } = require('./controllers/buscarController');
+const { createVideo, updateVideo, deleteVideo, getVideo } = require('./controllers/videoController');
 
 app.post('/usuarios', usuariosCreate);
 app.get('/usuarios', usuariosGet);
@@ -148,5 +149,11 @@ app.delete('/playlist', playlistDelete);
 //Ruta para buscar Videos
 app.get('/buscar', buscarVideos);
 
+
+//Rutas para gestionar videos
+app.post('/videos', createVideo);
+app.get('/videos', getVideo);
+app.patch('/videos/:id', updateVideo);
+app.delete('/videos/:id', deleteVideo);
 
 app.listen(3001, () => console.log(`Example app listening on port 3001!`))

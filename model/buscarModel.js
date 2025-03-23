@@ -1,9 +1,19 @@
 const mongose = require('mongoose');
 
 const busquedaVideo = new mongose.Schema({
-    title: String,
-    description: String,
-    playlistId: mongose.Schema.Types.ObjectId
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true    
+    },
+    playlistId: {
+        type: mongose.Schema.Types.ObjectId,
+        ref: 'videos',
+        required: true
+    }
 });
 
-module.exports = mongose.model('Video', busquedaVideo);
+module.exports = mongose.model('buscar', busquedaVideo);
