@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "KidsTube",
     "collectionId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
-    "dateExported": "2025-03-14T20:51:42.207Z",
+    "dateExported": "2025-03-23T22:00:43.888Z",
     "version": "1.2",
     "folders": [],
     "requests": [
@@ -32,7 +32,7 @@
             "method": "GET",
             "sortNum": 20000,
             "created": "2025-02-26T22:22:59.160Z",
-            "modified": "2025-02-26T22:22:59.160Z",
+            "modified": "2025-03-14T22:17:57.966Z",
             "headers": []
         },
         {
@@ -68,7 +68,191 @@
                     "value": "application/json"
                 }
             ]
+        },
+        {
+            "_id": "5047a5ba-b229-4601-935b-4840ccdc80e8",
+            "colId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
+            "containerId": "",
+            "name": "KidsTube DELETE",
+            "url": "http://localhost:3001/usuarios?id=67bf6a8ff9d2dfacbedc9cfd",
+            "method": "DELETE",
+            "sortNum": 50000,
+            "created": "2025-03-14T22:19:44.759Z",
+            "modified": "2025-03-14T22:19:44.759Z",
+            "headers": [
+                {
+                    "name": "Key",
+                    "value": "application/json"
+                }
+            ],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "67bf6a8ff9d2dfacbedc9cfd",
+                    "isPath": false
+                }
+            ]
+        },
+        {
+            "_id": "8e7bb39a-5b5b-4fb3-b94b-f185ca4b020b",
+            "colId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
+            "containerId": "",
+            "name": "KidsTube-CrearUsuarioRestringido",
+            "url": "http://localhost:3001/restringido",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2025-03-23T21:35:54.510Z",
+            "modified": "2025-03-23T21:35:54.510Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n    \"nombre_completo\": \"Pablo\",\r\n    \"numero\": \"123456789\",\r\n    \"edad\": 12,\r\n    \"pin\": \"123456\",\r\n    \"avatar\": \"/img/avatar1.png\"\r\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "962f0785-db7a-454e-afb8-66f980e4de9e",
+            "colId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
+            "containerId": "",
+            "name": "KidsTube-ObtenerUsuariosRestringidos",
+            "url": "http://localhost:3001/restringido",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2025-03-23T21:36:39.038Z",
+            "modified": "2025-03-23T21:36:39.038Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n    \"nombre_completo\": \"Pablo\",\r\n    \"numero\": \"123456789\",\r\n    \"edad\": 12,\r\n    \"pin\": \"123456\",\r\n    \"avatar\": \"/img/avatar1.png\"\r\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "2dc28f31-18f9-4e16-9538-7d26b0e44fdf",
+            "colId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
+            "containerId": "",
+            "name": "KidsTube-ActualizarUsuarioRestringido",
+            "url": "http://localhost:3001/restringido/67e07e7c59e3fbb68ccddb13",
+            "method": "PUT",
+            "sortNum": 80000,
+            "created": "2025-03-23T21:38:35.977Z",
+            "modified": "2025-03-23T21:38:35.977Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n    \"nombre_completo\": \"Lorena\",\r\n    \"numero\": \"123456789\",\r\n    \"edad\": 12,\r\n    \"pin\": \"123456\",\r\n    \"avatar\": \"/img/avatar2.png\"\r\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "03f4bea7-981a-43bf-828d-12653ade9679",
+            "colId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
+            "containerId": "",
+            "name": "KidsTube-EliminarUsuarioRestringido",
+            "url": "http://localhost:3001/restringido/67e07e7c59e3fbb68ccddb13",
+            "method": "DELETE",
+            "sortNum": 90000,
+            "created": "2025-03-23T21:39:55.137Z",
+            "modified": "2025-03-23T21:39:55.137Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n    \"nombre_completo\": \"Lorena\",\r\n    \"numero\": \"123456789\",\r\n    \"edad\": 12,\r\n    \"pin\": \"123456\",\r\n    \"avatar\": \"/img/avatar2.png\"\r\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "deac5b4a-f352-4435-a460-362b714fcbf3",
+            "colId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
+            "containerId": "",
+            "name": "KidsTube-CrearPlaylist",
+            "url": "http://localhost:3001/playlist",
+            "method": "POST",
+            "sortNum": 100000,
+            "created": "2025-03-23T21:46:25.509Z",
+            "modified": "2025-03-23T21:46:25.509Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n    \"nombre_playlist\": \"Playlist de Pablo\",\r\n    \"perfiles_asociados\": \"Pablo\"\r\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "a0bfc11f-1a39-4a2c-be63-3c143ba0d6f5",
+            "colId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
+            "containerId": "",
+            "name": "KidsTube-ObtenerPlaylist",
+            "url": "http://localhost:3001/playlist",
+            "method": "GET",
+            "sortNum": 110000,
+            "created": "2025-03-23T21:47:25.488Z",
+            "modified": "2025-03-23T21:53:46.010Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"nombre_playlist\": \"Playlist de Lorena\",\n    \"perfiles_asociados\": \"Lorena\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "fafe1787-324a-4f28-a431-cbf4cc25dc1c",
+            "colId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
+            "containerId": "",
+            "name": "KidsTube-CrearVideo",
+            "url": "http://localhost:3001/videos",
+            "method": "POST",
+            "sortNum": 120000,
+            "created": "2025-03-23T21:50:33.680Z",
+            "modified": "2025-03-23T21:50:33.680Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n    \"title\": \"Canción de Granja\",\r\n    \"url\": \"https://www.youtube.com/watch?v=YWAJF8esH4s\",\r\n    \"description\": \"Descripción del video de ejemplo\",\r\n    \"playlistId\": \"67e0810f59e3fbb68ccddb22\"\r\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "1b91fe19-ed3b-4f84-a81b-5f0c715412a4",
+            "colId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
+            "containerId": "",
+            "name": "KidsTube-ObtenerVideo",
+            "url": "http://localhost:3001/videos",
+            "method": "GET",
+            "sortNum": 130000,
+            "created": "2025-03-23T21:51:08.052Z",
+            "modified": "2025-03-23T21:51:08.052Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n    \"title\": \"Canción de Granja\",\r\n    \"url\": \"https://www.youtube.com/watch?v=YWAJF8esH4s\",\r\n    \"description\": \"Descripción del video de ejemplo\",\r\n    \"playlistId\": \"67e0810f59e3fbb68ccddb22\"\r\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "5897db12-ded5-40f2-91f1-131093acb03c",
+            "colId": "cd61b831-e324-4e35-b7f0-dcd0cacde50a",
+            "containerId": "",
+            "name": "KidsTube-ObtenerVideosDePlaylist",
+            "url": "http://localhost:3001/videos?playlistId=67e0810f59e3fbb68ccddb22",
+            "method": "GET",
+            "sortNum": 140000,
+            "created": "2025-03-23T21:55:17.943Z",
+            "modified": "2025-03-23T21:55:17.943Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "playlistId",
+                    "value": "67e0810f59e3fbb68ccddb22",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n    \"title\": \"Canción de Granja\",\r\n    \"url\": \"https://www.youtube.com/watch?v=YWAJF8esH4s\",\r\n    \"description\": \"Descripción del video de ejemplo\",\r\n    \"playlistId\": \"67e0810f59e3fbb68ccddb22\"\r\n}",
+                "form": []
+            }
         }
     ],
-    "ref": "qUkXAySbzOjspnph9Ojzx1cBGYpaUQsRVky5zt15RClLZjGoXaCgmtmkg868Lmj6_-YE3k7b7QNmnbqR1icfYg"
+    "ref": "qUkXAySbzOjspnph9Ojzx2agP55qPdjPL9GIvSY17TY9pPKO55EvIDlJfvdYm72hNoI6KzCwGA5LwvrSVyRE-Q"
 }
