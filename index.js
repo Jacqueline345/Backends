@@ -1,4 +1,5 @@
 const Usuario = require('./model/usuarioModel'); // Asegúrate de ajustar la ruta
+const playlistModel = require('./model/playlist');
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -33,6 +34,7 @@ const restringidoModel = require('./model/restringidoModel');
 const { playlistCreate, playlistGet, playlistUpdate, playlistDelete } = require('./controllers/playlistController');
 const { buscarVideos } = require('./controllers/buscarController');
 const { createVideo, updateVideo, deleteVideo, getVideo } = require('./controllers/videoController');
+const playlist = require('./model/playlist');
 
 app.post('/usuarios', usuariosCreate);
 app.get('/usuarios', usuariosGet);
@@ -149,6 +151,81 @@ app.delete('/playlist', playlistDelete);
 //Ruta para buscar Videos
 app.get('/buscar', buscarVideos);
 
+app.delete('/playlist/:id', async (req, res) => {
+  try {
+      const { id } = req.params;
+
+      // Verificar que el ID tenga el formato correcto de MongoDB
+      if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+          return res.status(400).json({ message: "ID inválido" });
+      }
+
+      const result = await playlistModel.findByIdAndDelete(id);
+
+      if (!result) {
+          return res.status(404).json({ message: "Playlist no encontrado" });
+      }
+
+      res.json({ message: "Eliminado correctamente" });
+  } catch (error) {
+      console.error("Error al eliminar:", error);
+      res.status(500).json({ message: "Error interno del servidor" });
+  }
+});
+
+app.get('/playlist/:id', async (req, res) => {
+  try {
+      const { id } = req.params;
+
+      // Verifica si el ID tiene el formato correcto (24 caracteres hexadecimales)
+      if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+          return res.status(400).json({ message: "ID inválido" });
+      }
+
+      const play = await playlistModel.findById(id);
+
+      if (!play) {
+          return res.status(404).json({ message: "Playlist no encontrado" });
+      }
+
+      res.json(play); // Enviar el playlist como respuesta
+
+  } catch (error) {
+      console.error("Error al buscar el playlist:", error);
+      res.status(500).json({ message: "Error interno del servidor" });
+  }
+});
+
+app.put('/playlist/:id', async (req, res) => {
+  try {
+    const { id } = req.params; // Obtener el ID desde los parámetros de la URL
+    const updatedData = req.body; // Los datos que se enviaron en el cuerpo de la solicitud
+
+    // Verifica si el ID tiene el formato correcto (24 caracteres hexadecimales)
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: "ID inválido" });
+    }
+
+    // Busca el playlist en la base de datos por su ID
+    const play = await playlistModel.findById(id);
+    if (!play) {
+      return res.status(404).json({ message: "play no encontrado" });
+    }
+
+    // Actualiza los datos del playlist con los nuevos datos
+    Object.assign(play, updatedData);  // Usamos los nuevos datos
+
+    // Guarda los cambios en la base de datos
+    await play.save();  // Guarda el playlist con los datos actualizados
+
+    // Devuelve la respuesta con el playlist actualizado
+    res.status(200).json(play);
+
+  } catch (error) {
+    console.error("Error al actualizar el playlist:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+});
 
 //Rutas para gestionar videos
 app.post('/videos', createVideo);
