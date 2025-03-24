@@ -1,4 +1,5 @@
 const videoModel = require('../model/videoModel');
+const { convertToEmbedUrl } = require('../js/functionVideo');
 
 /**
  * Create Video
@@ -9,7 +10,7 @@ const createVideo = async (req, res) => {
     let video = new videoModel();
 
     video.title = req.body.title;
-    video.url = req.body.url;
+    video.url = convertToEmbedUrl(req.body.url);//convierte la url en formato embed
     video.description = req.body.description;
     video.playlistId = req.body.playlistId;
 
@@ -87,9 +88,11 @@ const updateVideo = (req, res) => {
         videoModel.findById(req.query.id)
         .then(video => {
             if (video) {
-                //update the video fields
+                //convertir url a formato embed
+                const newUrl = req.body.url ? convertToEmbedUrl(req.body.url) : video.url;
+                //actualizar los campos del video
                 video.title = req.body.title || video.title;
-                video.url = req.body.url || video.url;
+                video.url = newUrl;
                 video.description = req.body.description || video.description;
                 video.playlistId = req.body.playlistId || video.playlistId;
                 video.save()
