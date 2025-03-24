@@ -1,4 +1,5 @@
 const videoModel = require('../model/videoModel');
+const { convertToEmbedUrl } = require('../js/functionVideo');
 
 /**
  * Create Video
@@ -9,7 +10,7 @@ const createVideo = async (req, res) => {
     let video = new videoModel();
 
     video.title = req.body.title;
-    video.url = req.body.url;
+    video.url = convertToEmbedUrl(req.body.url);//convierte la url en formato embed
     video.description = req.body.description;
     video.playlistId = req.body.playlistId;
 
@@ -85,34 +86,36 @@ const getVideo = (req, res) => {
 const updateVideo = (req, res) => {
     if (req.query && req.query.id) {
         videoModel.findById(req.query.id)
-            .then(video => {
-                if (video) {
-                    //update the video fields
-                    video.title = req.body.title || video.title;
-                    video.url = req.body.url || video.url;
-                    video.description = req.body.description || video.description;
-                    video.playlistId = req.body.playlistId || video.playlistId;
-                    video.save()
-                        .then(() => {
-                            res.json(video);
-                        })
-                        .catch((err) => {
-                            res.status(422);
-                            console.log('error while updating the video', err);
-                            res.json({
-                                error: 'There was an error updating the video'
-                            });
-                        });
-                } else {
-                    res.status(404);
-                    res.json({ error: 'Video doesnn\'t exist' });
-                }
-            })
-            .catch((err) => {
-                res.status(500);
-                console.log('error while querying the video', err);
-                res.json({ error: 'There was an error' });
-            });
+        .then(video => {
+            if (video) {
+                //convertir url a formato embed
+                const newUrl = req.body.url ? convertToEmbedUrl(req.body.url) : video.url;
+                //actualizar los campos del video
+                video.title = req.body.title || video.title;
+                video.url = newUrl;
+                video.description = req.body.description || video.description;
+                video.playlistId = req.body.playlistId || video.playlistId;
+                video.save()
+                .then(() => {
+                    res.json(video);
+                })
+                .catch((err) => {
+                    res.status(422);
+                    console.log('error while updating the video', err);
+                    res.json({
+                        error: 'There was an error updating the video'
+                    });
+                });
+            } else {
+                res.status(404);
+                res.json({ error: 'Video doesnn\'t exist'});
+            }
+        })
+        .catch ((err) => {
+            res.status(500);
+            console.log('error while querying the video', err);
+            res.json({ error: 'There was an error' });
+        });
     } else {
         res.status(422);
         res.json({ error: 'No valis ID provide for the video' });
