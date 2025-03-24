@@ -24,6 +24,11 @@ app.use(cors({
   methods: "*"
 }));
 
+// Configurar middleware
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
 // Servir archivos estáticos
 app.use(express.static(path.join(__dirname, '../frontend')));
 const { usuariosCreate, usuariosGet, UsuarioUpdate, deleteUsuario, } = require('./controllers/usuarioController');
@@ -35,6 +40,7 @@ const { playlistCreate, playlistGet, playlistUpdate, playlistDelete } = require(
 const { buscarVideos } = require('./controllers/buscarController');
 const { createVideo, updateVideo, deleteVideo, getVideo } = require('./controllers/videoController');
 const playlist = require('./model/playlist');
+const videoModel = require('./model/videoModel');
 
 app.post('/usuarios', usuariosCreate);
 app.get('/usuarios', usuariosGet);
@@ -70,46 +76,46 @@ app.use("/img", express.static(path.join(__dirname, "img")));
 
 app.delete('/restringido/:id', async (req, res) => {
   try {
-      const { id } = req.params;
+    const { id } = req.params;
 
-      // Verificar que el ID tenga el formato correcto de MongoDB
-      if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-          return res.status(400).json({ message: "ID inválido" });
-      }
+    // Verificar que el ID tenga el formato correcto de MongoDB
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: "ID inválido" });
+    }
 
-      const result = await restringidoModel.findByIdAndDelete(id);
+    const result = await restringidoModel.findByIdAndDelete(id);
 
-      if (!result) {
-          return res.status(404).json({ message: "Registro no encontrado" });
-      }
+    if (!result) {
+      return res.status(404).json({ message: "Registro no encontrado" });
+    }
 
-      res.json({ message: "Eliminado correctamente" });
+    res.json({ message: "Eliminado correctamente" });
   } catch (error) {
-      console.error("Error al eliminar:", error);
-      res.status(500).json({ message: "Error interno del servidor" });
+    console.error("Error al eliminar:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 });
 
 app.get('/restringido/:id', async (req, res) => {
   try {
-      const { id } = req.params;
+    const { id } = req.params;
 
-      // Verifica si el ID tiene el formato correcto (24 caracteres hexadecimales)
-      if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-          return res.status(400).json({ message: "ID inválido" });
-      }
+    // Verifica si el ID tiene el formato correcto (24 caracteres hexadecimales)
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: "ID inválido" });
+    }
 
-      const usuario = await restringidoModel.findById(id);
+    const usuario = await restringidoModel.findById(id);
 
-      if (!usuario) {
-          return res.status(404).json({ message: "Usuario no encontrado" });
-      }
+    if (!usuario) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
 
-      res.json(usuario); // Enviar el usuario como respuesta
+    res.json(usuario); // Enviar el usuario como respuesta
 
   } catch (error) {
-      console.error("Error al buscar usuario:", error);
-      res.status(500).json({ message: "Error interno del servidor" });
+    console.error("Error al buscar usuario:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 });
 
@@ -153,46 +159,46 @@ app.get('/buscar', buscarVideos);
 
 app.delete('/playlist/:id', async (req, res) => {
   try {
-      const { id } = req.params;
+    const { id } = req.params;
 
-      // Verificar que el ID tenga el formato correcto de MongoDB
-      if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-          return res.status(400).json({ message: "ID inválido" });
-      }
+    // Verificar que el ID tenga el formato correcto de MongoDB
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: "ID inválido" });
+    }
 
-      const result = await playlistModel.findByIdAndDelete(id);
+    const result = await playlistModel.findByIdAndDelete(id);
 
-      if (!result) {
-          return res.status(404).json({ message: "Playlist no encontrado" });
-      }
+    if (!result) {
+      return res.status(404).json({ message: "Playlist no encontrado" });
+    }
 
-      res.json({ message: "Eliminado correctamente" });
+    res.json({ message: "Eliminado correctamente" });
   } catch (error) {
-      console.error("Error al eliminar:", error);
-      res.status(500).json({ message: "Error interno del servidor" });
+    console.error("Error al eliminar:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 });
 
 app.get('/playlist/:id', async (req, res) => {
   try {
-      const { id } = req.params;
+    const { id } = req.params;
 
-      // Verifica si el ID tiene el formato correcto (24 caracteres hexadecimales)
-      if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-          return res.status(400).json({ message: "ID inválido" });
-      }
+    // Verifica si el ID tiene el formato correcto (24 caracteres hexadecimales)
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: "ID inválido" });
+    }
 
-      const play = await playlistModel.findById(id);
+    const play = await playlistModel.findById(id);
 
-      if (!play) {
-          return res.status(404).json({ message: "Playlist no encontrado" });
-      }
+    if (!play) {
+      return res.status(404).json({ message: "Playlist no encontrado" });
+    }
 
-      res.json(play); // Enviar el playlist como respuesta
+    res.json(play); // Enviar el playlist como respuesta
 
   } catch (error) {
-      console.error("Error al buscar el playlist:", error);
-      res.status(500).json({ message: "Error interno del servidor" });
+    console.error("Error al buscar el playlist:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 });
 
@@ -230,7 +236,70 @@ app.put('/playlist/:id', async (req, res) => {
 //Rutas para gestionar videos
 app.post('/videos', createVideo);
 app.get('/videos', getVideo);
-app.patch('/videos/:id', updateVideo);
-app.delete('/videos/:id', deleteVideo);
+app.patch('/videos', updateVideo);
+app.delete('/videos', deleteVideo);
+
+app.get('/videos/:id', async (req, res) => {
+  const videoId = req.params.id;
+  const video = await videoModel.findById(videoId); // Suponiendo que estás usando Mongoose
+
+  if (!video) {
+    return res.status(404).json({ message: 'Video no encontrado' });
+  }
+
+  res.json(video);
+});
+
+app.put('/videos/:id', async (req, res) => {
+  try {
+    const { id } = req.params; // Obtener el ID desde los parámetros de la URL
+    const updatedData = req.body; // Los datos que se enviaron en el cuerpo de la solicitud
+
+    // Verifica si el ID tiene el formato correcto (24 caracteres hexadecimales)
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: "ID inválido" });
+    }
+
+    // Busca el playlist en la base de datos por su ID
+    const videos = await videoModel.findById(id);
+    if (!videos) {
+      return res.status(404).json({ message: "videos no encontrado" });
+    }
+
+    // Actualiza los datos del playlist con los nuevos datos
+    Object.assign(videos, updatedData);  // Usamos los nuevos datos
+
+    // Guarda los cambios en la base de datos
+    await videos.save();  // Guarda el playlist con los datos actualizados
+
+    // Devuelve la respuesta con el playlist actualizado
+    res.status(200).json(videos);
+
+  } catch (error) {
+    console.error("Error al actualizar el playlist:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+});
+app.delete('/videos/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Verificar que el ID tenga el formato correcto de MongoDB
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: "ID inválido" });
+    }
+
+    const result = await videoModel.findByIdAndDelete(id);
+
+    if (!result) {
+      return res.status(404).json({ message: "videos no encontrado" });
+    }
+
+    res.json({ message: "Eliminado correctamente" });
+  } catch (error) {
+    console.error("Error al eliminar:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+});
 
 app.listen(3001, () => console.log(`Example app listening on port 3001!`))
