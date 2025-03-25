@@ -38,7 +38,6 @@ const usuarioModel = require('./model/usuarioModel');
 const { restringidoCreate, restringidoGet, restringidoUpdate, restringidoDelete } = require('./controllers/restringidoController');
 const restringidoModel = require('./model/restringidoModel');
 const { playlistCreate, playlistGet, playlistUpdate, playlistDelete } = require('./controllers/playlistController');
-const { buscarVideos } = require('./controllers/buscarController');
 const { createVideo, updateVideo, deleteVideo, getVideo } = require('./controllers/videoController');
 const playlist = require('./model/playlist');
 const videoModel = require('./model/videoModel');
@@ -155,8 +154,7 @@ app.get('/playlist', playlistGet);
 app.patch('/playlist', playlistUpdate);
 app.delete('/playlist', playlistDelete);
 
-//Ruta para buscar Videos
-app.get('/buscar', buscarVideos);
+
 
 app.delete('/playlist/:id', async (req, res) => {
   try {
@@ -301,7 +299,23 @@ app.delete('/videos/:id', async (req, res) => {
     console.error("Error al eliminar:", error);
     res.status(500).json({ message: "Error interno del servidor" });
   }
-});  
+});
+
+// ruta para buscar videos
+app.get('/search-videos', async (req, res) =>  {
+  const searchText = req.query.q.toLowerCase();
+  try {
+    const videos = await Video.find({
+      $or: [
+        { title: { $regex: searchText, $options: 'i' } },
+        { description: { $regex: searchText, $options: 'i' } }
+      ]
+    });
+    res.json(videos);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al buscar videos' });
+  }
+});
 
 app.get('/playlist', async (req, res) => {
   try {
