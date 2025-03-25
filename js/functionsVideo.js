@@ -88,6 +88,7 @@ async function saveVideo(event) {
     } catch (error) {
         console.error('Error al guardar el video:', error);
     }
+    
 }
 
 async function editVideo(videoId) {
@@ -103,6 +104,8 @@ async function editVideo(videoId) {
             document.getElementById('video-title').value = video.title;
             document.getElementById('video-url').value = video.url;
             document.getElementById('video-description').value = video.description;
+            document.getElementById('playlistId').value = video.playlistId;
+
 
             const videoModal = new bootstrap.Modal(document.getElementById('videoModal'));
             videoModal.show();
