@@ -1,5 +1,6 @@
 const Usuario = require('./model/usuarioModel'); // Asegúrate de ajustar la ruta
 const playlistModel = require('./model/playlist');
+const Video = require('./model/videoModel');
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -299,6 +300,29 @@ app.delete('/videos/:id', async (req, res) => {
   } catch (error) {
     console.error("Error al eliminar:", error);
     res.status(500).json({ message: "Error interno del servidor" });
+  }
+});  
+
+app.get('/playlist', async (req, res) => {
+  try {
+      // Obtener todas las playlists
+      const playlists = await playlistModel.find().lean();
+      
+      // Contar los videos asociados a cada playlist
+      const playlistsWithVideoCount = await Promise.all(playlists.map(async (playlist) => {
+          // Contar los videos que tienen el ID de la playlist
+          const videoCount = await Video.countDocuments({ playlistId: playlist._id });
+          return {
+              ...playlist,
+              videoCount // Agregar el conteo de videos a la playlist
+          };
+      }));
+
+      // Devolver la lista de playlists con el conteo de videos
+      res.json(playlistsWithVideoCount);
+  } catch (error) {
+      console.error(error); // Agregar un log para ver el error en la consola
+      res.status(500).send({ error: 'Error al obtener las playlists' });
   }
 });
 

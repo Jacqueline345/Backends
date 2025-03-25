@@ -52,6 +52,7 @@ async function playGet() {
             const item = document.createElement('li');
             item.innerHTML = `
             <td>${element.nombre_playlist}</td> <!-- Columna para el nombre del playlist -->
+            <td>${element.videoCount !== undefined ? element.videoCount : 0} videos</td> <!-- Columna para la cantidad de videos -->
             <td> <!-- Columna para las acciones -->
                 <a href="#" class="edit_button" data-id="${element._id}">Edit</a>
                 <a href="#" class="delete_button" data-id="${element._id}">Delete</a>
