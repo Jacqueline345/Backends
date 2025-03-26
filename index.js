@@ -1,13 +1,14 @@
 const Usuario = require('./model/usuarioModel'); // Asegúrate de ajustar la ruta
 const playlistModel = require('./model/playlist');
 const Video = require('./model/videoModel');
+const restringido = require('./model/restringidoModel');
 const express = require('express');
 const app = express();
 const path = require('path');
 // database connection
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://127.0.0.1:27017/usuarios", {
+mongoose.connect("mongodb://127.0.0.1:27017/KidsTube", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -48,6 +49,7 @@ app.patch('/usuarios', UsuarioUpdate);
 app.delete('/usuarios', deleteUsuario);
 app.post('/login', loginUsuario);
 app.post('/logout', logoutUsuario);
+
 // Ruta de validación
 app.post('/validar', async (req, res) => {
   const { pin } = req.body;
@@ -66,10 +68,39 @@ app.post('/validar', async (req, res) => {
     res.status(500).json({ message: 'Error del servidor' });
   }
 });
+//valida pin de usuario restringido
+app.post('/validar', async (req, res) => {
+  const { pin } = req.body;
+
+  try {
+    // Buscamos el usuario por su id
+    const user = await restringido.findOne({ pin });
+
+    if (user && user.pin === pin) {
+      res.status(200).json({ message: 'Autenticación exitosa' });
+    } else {
+      res.status(401).json({ message: 'PIN incorrecto o usuario no encontrado' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error del servidor' });
+  }
+});
+
 app.post('/restringido', restringidoCreate);
 app.get('/restringido', restringidoGet);
 app.patch('/restringido', restringidoUpdate);
 app.delete('/restringido', restringidoDelete);
+
+app.get('/restringido', async (req, res) => {
+  try {
+      const restringidos = await restringidoModel.find();
+      res.json(restringidos);
+  } catch (error) {
+      console.error('Error al obtener los usuarios restringidos:', error);
+      res.status(500).json({ message: 'Error interno del servidor' });
+  }
+});
 
 // Servir imágenes estáticas desde la carpeta 'img'
 app.use("/img", express.static(path.join(__dirname, "img")));
@@ -149,6 +180,17 @@ app.put('/restringido/:id', async (req, res) => {
     res.status(500).json({ message: "Error interno del servidor" });
   }
 });
+
+app.get('/restricted-users', async (req, res) => {
+  const principalUserId = req.query.principalUserId;
+  try {
+    const users = await restringido.find({ principalUserId: principalUserId });
+    res.json(users);
+  } catch (error){
+    res.status(500).json({ error: 'Error al obtener usuarios restringidos' });
+  }
+});
+
 app.post('/playlist', playlistCreate);
 app.get('/playlist', playlistGet);
 app.patch('/playlist', playlistUpdate);
