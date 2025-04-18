@@ -1,7 +1,9 @@
-document.addEventListener("DOMContentLoaded", function () {
-    loadVideos();
-    document.getElementById('video-form').addEventListener('submit', saveVideo);
-});
+if (typeof document !== "undefined") {
+    document.addEventListener("DOMContentLoaded", function () {
+        loadVideos();
+        document.getElementById('video-form').addEventListener('submit', saveVideo);
+    });
+}
 
 async function loadVideos() {
     const urlParams = new URLSearchParams(window.location.search);

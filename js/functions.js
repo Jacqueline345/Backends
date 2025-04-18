@@ -158,6 +158,7 @@ async function restringidoGet() {
 
     }
 }
+
 // Función para asignar eventos a los botones "Delete"
 function assignDeleteEvents() {
     document.querySelectorAll('.delete_button').forEach(button => {
