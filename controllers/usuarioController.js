@@ -1,4 +1,5 @@
-const Usuarios = require('../model/usuarioModel');
+const usuarioModel = require('../model/usuarioModel');
+const bcrypt = require('bcryptjs');
 
 /**
  * Creates a user
@@ -6,6 +7,35 @@ const Usuarios = require('../model/usuarioModel');
  * @param {*} req
  * @param {*} res
  */
+const usuariosCreate = async (args) => {
+  const { nombre, apellidos, telefono, correos, nacimiento, pais, contrasena, pin } = args;
+
+  if (!isAdult(nacimiento)) {
+    throw new Error("Debes ser mayor de edad para registrarte.");
+  }
+
+  const hashedPassword = await bcrypt.hash(contrasena, 10);  // Hashea la contraseña
+
+  const nuevoUsuario = new Usuarios({
+    nombre,
+    apellidos,
+    telefono,
+    correos,
+    nacimiento,
+    pais,
+    contrasena: hashedPassword,
+    pin
+  });
+
+  try {
+    await nuevoUsuario.save();
+    return nuevoUsuario;
+  } catch (error) {
+    throw new Error("Error al crear el usuario: " + error.message);
+  }
+};
+
+/*
 const usuariosCreate = (req, res) => {
     let usuarios = new Usuarios();
 
@@ -45,7 +75,7 @@ const usuariosCreate = (req, res) => {
             });
         }
     }
-}
+}*/
 
 
 function isAdult(nacimiento) {
@@ -58,13 +88,24 @@ function isAdult(nacimiento) {
     }
     return age >= 18;
 }
+const usuariosGet = (args) => {
+    const { nombre } = args || {};  // Recibe 'nombre' de los argumentos
+    if (nombre) {
+        // Si se proporciona 'nombre', busca los usuarios con ese nombre
+        return usuarioModel.find({ nombre });
+    } else {
+        // Si no se proporciona 'nombre', devuelve todos los usuarios
+        return usuarioModel.find();
+    }
+};
 
 /**
  * Get all users
  * @param {*} req 
  * @param {*} res 
  */
-const usuariosGet = (req, res) => {
+
+/*const usuariosGet = (req, res) => {
     const id = req.params.id;
 
     if (id) {
@@ -96,7 +137,7 @@ const usuariosGet = (req, res) => {
                 console.log('Error al obtener los usuarios:', err);
             });
     }
-}
+}*/
 /**
  * Updates a usuarios
  *
