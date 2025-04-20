@@ -23,15 +23,19 @@ const usuarios = new mongoose.Schema({
     pais: {
         type: String
     },
-    contraseña: {
+    contrasena: {
         type: String,
         required: true
     },
     pin: {
-        type: String,
+        type: Number,
         required: true,
         minlength: 6 
-    }
+    },
+    estado: {
+        type: String,
+        default: "pendiente"
+      }
 });
 
 module.exports = mongoose.model('usuarios', usuarios);

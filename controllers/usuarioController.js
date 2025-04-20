@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs');
  * @param {*} res
  */
 const usuariosCreate = async (args) => {
-  const { nombre, apellidos, telefono, correos, nacimiento, pais, contrasena, pin } = args;
+  const { nombre, apellidos, telefono, correos, nacimiento, pais, contrasena, pin, estado } = args;
 
   if (!isAdult(nacimiento)) {
     throw new Error("Debes ser mayor de edad para registrarte.");
@@ -16,7 +16,7 @@ const usuariosCreate = async (args) => {
 
   const hashedPassword = await bcrypt.hash(contrasena, 10);  // Hashea la contraseña
 
-  const nuevoUsuario = new Usuarios({
+  const nuevoUsuario = new usuarioModel({
     nombre,
     apellidos,
     telefono,
@@ -24,13 +24,15 @@ const usuariosCreate = async (args) => {
     nacimiento,
     pais,
     contrasena: hashedPassword,
-    pin
+    pin,
+    estado: "pendiente"  // Estado por defecto
   });
 
   try {
     await nuevoUsuario.save();
     return nuevoUsuario;
   } catch (error) {
+    console.error("Error al crear el usuario:", error);
     throw new Error("Error al crear el usuario: " + error.message);
   }
 };

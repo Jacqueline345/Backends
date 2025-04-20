@@ -4,13 +4,18 @@ const express = require('express');
 const { createHandler } = require('graphql-http/lib/use/express');
 const { ruruHTML } = require('ruru/server');
 const mongoose = require('mongoose');
-const db = mongoose.connect(process.env.DB_CONNECTION_STRING);
+const schema = require('./graphql-schema'); // Importar el esquema GraphQL
+//const resolvers = require('./resolver'); // Importar los resolvers
+
+// Conectar a MongoDB
+mongoose.connect(process.env.DB_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Conectado a MongoDB'))
+    .catch(err => console.error('Error al conectar a MongoDB:', err));
 
 const {
     usuariosGet, usuariosCreate
 } = require('./controllers/usuarioController');
 
-const { schema } = require('./graphql-schema'); // Importar el esquema GraphQL
 
 // Resolvers
 const root = {
@@ -32,7 +37,7 @@ app.use(cors()); // Habilitar CORS
 // Endpoint para consultas GraphQL (POST o GET con query string)
 app.all('/graphql', createHandler({
     schema: schema,
-    rootValue: root,
+    rootValue: root
 }));
 
 // Ruru: interfaz visual para probar GraphQL

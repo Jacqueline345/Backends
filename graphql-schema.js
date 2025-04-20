@@ -1,11 +1,22 @@
-const {buildSchema} = require('graphql');
-exports.schema = buildSchema(`
+const { buildSchema } = require('graphql');
+const schema = buildSchema(`
     type Usuario {
         id: ID!
         nombre: String!
         apellidos: String!
-        telefono: String!
-        correos: [String!]!
+        telefono: Int!
+        correos: String!
+        nacimiento: String!
+        pais: String!
+        contrasena: String!
+        pin: Int!
+        estado: String!
+    }
+         input CreateUsuariosInput {
+        nombre: String!
+        apellidos: String!
+        telefono: Int!
+        correos: String!
         nacimiento: String!
         pais: String!
         contrasena: String!
@@ -17,6 +28,7 @@ exports.schema = buildSchema(`
     }
 
     type Mutation {
-        createUsuarios(nombre: String!, apellidos: String!, telefono: String!, correos: [String!]!, nacimiento: String!, pais: String!, contrasena: String!, pin: Int!): Usuario
+        createUsuarios(nombre: String!, apellidos: String!, telefono: Int!, correos: String!, nacimiento: String!, pais: String!, contrasena: String!, pin: Int!): Usuario
     }
 `);
+module.exports = schema;
