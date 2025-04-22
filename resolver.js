@@ -1,5 +1,7 @@
 // resolvers.js
+const { Token } = require('graphql');
 const Usuario = require('./model/usuarioModel'); 
+const {verificarCuenta} = require('./controllers/usuarioController');
 
 const resolvers = {
     getUsuarios: async () => {
@@ -17,6 +19,15 @@ const resolvers = {
             pin
         });
         return await nuevoUsuario.save();
+    },
+    //Mutación para verificar cuenta
+    verifyAccount: async(_, { token }) => {
+        try {
+            await verificarCuenta(token);
+            return { success: true, message: "Correo de verificación enviado con éxito"};
+        } catch (error){
+            return { success: false, message: "Error al verificar la cuenta:  " + error.message};
+        }
     }
 };
 

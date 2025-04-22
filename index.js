@@ -41,7 +41,7 @@ const usuarioModel = require('./model/usuarioModel');
 const { restringidoCreate, restringidoGet, restringidoUpdate, restringidoDelete } = require('./controllers/restringidoController');
 const restringidoModel = require('./model/restringidoModel');
 const { playlistCreate, playlistGet, playlistUpdate, playlistDelete } = require('./controllers/playlistController');
-const { createVideo, updateVideo, deleteVideo, getVideo } = require('./controllers/videoController');
+//const { createVideo, updateVideo, deleteVideo, getVideo } = require('./controllers/videoController');
 const playlist = require('./model/playlist');
 const videoModel = require('./model/videoModel');
 
@@ -275,7 +275,7 @@ app.put('/playlist/:id', async (req, res) => {
     res.status(500).json({ message: "Error interno del servidor" });
   }
 });
-
+/*
 //Rutas para gestionar videos
 app.post('/videos', createVideo);
 app.get('/videos', getVideo);
@@ -343,7 +343,7 @@ app.delete('/videos/:id', async (req, res) => {
     console.error("Error al eliminar:", error);
     res.status(500).json({ message: "Error interno del servidor" });
   }
-});
+});*/
 
 // ruta para buscar videos
 app.get('/search-videos', async (req, res) =>  {

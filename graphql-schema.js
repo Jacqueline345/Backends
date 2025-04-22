@@ -12,7 +12,13 @@ const schema = buildSchema(`
         pin: Int!
         estado: String!
     }
-         input CreateUsuariosInput {
+
+    type VerifyResponse {
+        success: Boolean!
+        message: String!
+    }
+
+    input CreateUsuariosInput {
         nombre: String!
         apellidos: String!
         telefono: Int!
@@ -29,6 +35,8 @@ const schema = buildSchema(`
 
     type Mutation {
         createUsuarios(nombre: String!, apellidos: String!, telefono: Int!, correos: String!, nacimiento: String!, pais: String!, contrasena: String!, pin: Int!): Usuario
+
+        verifyAccount(token: String!): VerifyResponse
     }
 `);
 module.exports = schema;
