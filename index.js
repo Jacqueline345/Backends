@@ -2,18 +2,29 @@ const Usuario = require('./model/usuarioModel'); // Asegúrate de ajustar la rut
 const playlistModel = require('./model/playlist');
 const Video = require('./model/videoModel');
 const express = require('express');
-const app = express();
+const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
 // database connection
 const mongoose = require("mongoose");
+const typeDefs = require('./graphql-schema'); // Importar el esquema GraphQL
+const resolvers = require('./resolvers'); // Importar los resolvers
 
-mongoose.connect("mongodb://127.0.0.1:27017/usuarios", {
+const startServer = async () => {
+  const app = express();
+
+await mongoose.connect("mongodb://127.0.0.1:27017/KidsTube", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
   .then(() => console.log("Conectado a MongoDB"))
   .catch(err => console.error("Error al conectar a MongoDB:", err));
 
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
+await server.start();
+server.applyMiddleware({ app});
 // parser for the request body (required for the POST and PUT methods)
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
@@ -340,4 +351,12 @@ app.get('/playlist', async (req, res) => {
   }
 });
 
-app.listen(3001, () => console.log(`Example app listening on port 3001!`))
+//app.listen(3001, () => console.log(`Example app listening on port 3001!`))
+
+app.listen(3001, () => {
+  console.log(`🚀 Servidor Express en http://localhost:3001`);
+  console.log(`📡 Endpoint GraphQL en http://localhost:3001${server.graphqlPath}`);
+});
+};
+
+startServer();

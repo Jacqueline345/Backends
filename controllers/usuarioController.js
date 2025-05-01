@@ -15,7 +15,7 @@ const usuariosCreate = (req, res) => {
     usuarios.correos = req.body.correos;
     usuarios.nacimiento = new Date(req.body.nacimiento);
     usuarios.pais = req.body.pais;
-    usuarios.contraseña = req.body.contraseña;
+    usuarios.contrasena = req.body.contrasena;
     usuarios.pin = req.body.pin;
 
     if (!isAdult(usuarios.nacimiento)) {

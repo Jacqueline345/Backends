@@ -23,7 +23,7 @@ const usuarios = new mongoose.Schema({
     pais: {
         type: String
     },
-    contraseña: {
+    contrasena: {
         type: String,
         required: true
     },
@@ -31,7 +31,12 @@ const usuarios = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 6 
-    }
+    },
+    estado: {
+        type: String,
+        enum: ['activo', 'pendiente'],
+        default: 'pendiente'
+    },
 });
 
 module.exports = mongoose.model('usuarios', usuarios);
