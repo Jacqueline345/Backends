@@ -21,98 +21,44 @@ const transporter = nodemailer.createTransport({
  * @param {*} req
  * @param {*} res
  */
-const usuariosCreate = async (args) => {
-    const { nombre, apellidos, telefono, correos, nacimiento, pais, contrasena, pin, estado } = args;
+const usuariosCreate = (req, res) => {
+    let usuarios = new Usuarios();
 
-    if (!isAdult(nacimiento)) {
-        throw new Error("Debes ser mayor de edad para registrarte.");
-    }
+    usuarios.nombre = req.body.nombre;
+    usuarios.apellidos = req.body.apellidos;
+    usuarios.telefono = req.body.telefono;
+    usuarios.correos = req.body.correos;
+    usuarios.nacimiento = new Date(req.body.nacimiento);
+    usuarios.pais = req.body.pais;
+    usuarios.contrasena = req.body.contrasena;
+    usuarios.pin = req.body.pin;
 
-    const hashedPassword = await bcrypt.hash(contrasena, 10);  // Hashea la contraseña
-
-    const nuevoUsuario = new usuarioModel({
-        nombre,
-        apellidos,
-        telefono,
-        correos,
-        nacimiento,
-        pais,
-        contrasena: hashedPassword,
-        pin,
-        estado: "pendiente"  // Estado por defecto
-    });
-
-    try {
-        await nuevoUsuario.save();
-
-        const payload = {
-            userId: nuevoUsuario._id,
-            email: nuevoUsuario.correos,
-        };
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        await sendVerificationEmail(nuevoUsuario.correos, token);
-        return nuevoUsuario;
-    } catch (error) {
-        console.error("Error al crear el usuario:", error);
-        throw new Error("Error al crear el usuario: " + error.message);
-    }
-};
-
-/**
- * Funcipon para enviar el correo de verificación
- * @param {*} email 
- * @param {*} token 
- */
-const sendVerificationEmail = async (email, token) => {
-    const verificationUrl = `https://kidstube.com/verificar?token=${token}`;
-
-    const mailOptions = {
-        from: '"KidsTube" <no-reply@kidstube.com>',
-        to: email,
-        subject: 'Verifica tu cuenta de KidsTube',
-        text: `¡Hola! Haz click en el siguiente enlace para verificar tu cuenta:\n\n${verificationUrl}`,
-        html: `<p>¡Hola!</p><p>Haz click en el siguiente enlace para verificar tu cuenta:</p><p><a href="${verificationUrl}">Verificar cuenta</a></p>`
-    };
-
-    try {
-        const info = await transporter.sendMail(mailOptions);
-        console.log('Correo de verificación enviado:', info.messageId);
-    } catch (error) {
-        console.error('Error al enviar el correo de verificación:', error);
-    }
-};
-
-/**
- * Verificar el token y activar la cuenta del usuario
- */
-const verificarCuenta = async (req, res) => {
-    const { token } = req.query;
-
-    if (!token) {
-        return res.status(400).send('Token no proporcionado');
-    }
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verifica el token
-
-        const usuario = await usuarioModel.findById(decoded.userId);
-        if (!usuario) {
-            return res.status(400).send('Usuario no encontrado');
+    if (!isAdult(usuarios.nacimiento)) {
+        return res.status(400).json({ message: 'Debes ser mayor de 18 años para registrarte.' });
+    } else {
+        if (usuarios.nombre && usuarios.apellidos) {
+            usuarios.save()
+                .then(() => {
+                    res.status(201);
+                    res.header({
+                        'location': `/usuarios/?id=${usuarios.id}`
+                    });
+                    res.json(usuarios);
+                })
+                .catch((err) => {
+                    res.status(422);
+                    console.log('error while saving the user', err);
+                    res.json({
+                        error: 'There was an error saving the user'
+                    });
+                });
+        } else {
+            res.status(422);
+            console.log('error while saving the user')
+            res.json({
+                error: 'No valid data provided for user'
+            });
         }
-
-        if (usuario.estado === 'activo') {
-            return res.status(400).send('La cuenta ya está activa');
-        }
-
-        usuario.estado = 'activo';  // Cambia el estado del usuario a 'activo'
-        await usuario.save();
-
-        return res.redirect('/login'); // Redirigir a la pantalla de login 
-
-    } catch (error) {
-        console.error('Error al verificar el token:', error);
-        return res.status(400).send('Token inválido o expirado');
     }
 };
 

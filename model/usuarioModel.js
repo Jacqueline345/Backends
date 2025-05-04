@@ -34,8 +34,9 @@ const usuarios = new mongoose.Schema({
     },
     estado: {
         type: String,
-        default: "pendiente"
-      }
+        enum: ['activo', 'pendiente'],
+        default: 'pendiente'
+    },
 });
 
 module.exports = mongoose.model('usuarios', usuarios);

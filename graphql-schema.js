@@ -1,42 +1,19 @@
-const { buildSchema } = require('graphql');
-const schema = buildSchema(`
-    type Usuario {
-        id: ID!
-        nombre: String!
-        apellidos: String!
-        telefono: Int!
-        correos: String!
-        nacimiento: String!
-        pais: String!
-        contrasena: String!
-        pin: Int!
-        estado: String!
-    }
-
-    type VerifyResponse {
-        success: Boolean!
-        message: String!
-    }
-
-    input CreateUsuariosInput {
-        nombre: String!
-        apellidos: String!
-        telefono: Int!
-        correos: String!
-        nacimiento: String!
-        pais: String!
-        contrasena: String!
-        pin: Int!
-    }
-
+const { gql } = require('apollo-server-express');
+const typeDefs = gql`
     type Query {
-        getUsuarios: [Usuario]
+        getAllUsers: [usuarios]
+        getUserById(id: ID!): usuarios
     }
-
-    type Mutation {
-        createUsuarios(nombre: String!, apellidos: String!, telefono: Int!, correos: String!, nacimiento: String!, pais: String!, contrasena: String!, pin: Int!): Usuario
-
-        verifyAccount(token: String!): VerifyResponse
+    type usuarios {
+        nombre: String,
+        apellidos: String,
+        telefono: Int,
+        correos: String,
+        nacimiento: String,
+        pais: String,
+        contrasena: String,
+        pin: String,
+        estado: String
     }
-`);
-module.exports = schema;
+`;
+module.exports = typeDefs;
