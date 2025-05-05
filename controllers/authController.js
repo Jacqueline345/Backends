@@ -20,14 +20,18 @@ async function loginUsuario(req, res) {
         if (!isMatch) {
             return res.status(400).json({ message: 'Contraseña incorrecta' });
         }
+        console.log('Contenido de la sesión:', req.session);
+        const telefono= req.session.telefono = usuario.telefono;
+        console.log('Teléfono almacenado en la sesión:', telefono);
         const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET || 'secretKey', { expiresIn: '1h' });
+        req.session.userId = usuario.id; // Almacena el ID del usuario en la sesión
 
         // 👇 Incluimos estado y nombre aquí
         res.status(200).json({
             message: 'Login exitoso',
             token,
             estado: usuario.estado,
-            nombre: usuario.nombre
+            nombre: usuario.nombre,
         });
     } catch (error) {
         console.error("Error al iniciar sesión:", error);

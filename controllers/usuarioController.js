@@ -1,4 +1,6 @@
 const Usuarios = require('../model/usuarioModel');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 /**
  * Creates a user
@@ -28,7 +30,14 @@ const usuariosCreate = (req, res) => {
                     res.header({
                         'location': `/usuarios/?id=${usuarios.id}`
                     });
-                    res.json(usuarios);
+                    const SECRET_KEY = process.env.JWT_SECRET
+                    const token = jwt.sign({ id: usuarios._id }, SECRET_KEY, { expiresIn: '1h' });
+                    res.status(200).json({
+                        message: 'Usuario creado exitosamente',
+                        token,
+                        estado: usuarios.estado,
+                        nombre: usuarios.nombre
+                    });
                 })
                 .catch((err) => {
                     res.status(422);
