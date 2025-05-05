@@ -1,19 +1,5 @@
-const usuarioModel = require('../model/usuarioModel');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-    host: process.env.MAILTRAP_HOST,
-    port: parseInt(process.env.MAILTRAP_PORT),
-    auth: {
-        user: process.env.MAILTRAP_USER,
-        pass: process.env.MAILTRAP_PASS
-    },
-    tls: {
-        rejectUnauthorized: false  // Esto evita el error del certificado
-    }
-});
+const Usuarios = require('../model/usuarioModel');
+const { enviarCorreoBienvenida } = require('../js/email');
 
 /**
  * Creates a user
@@ -39,6 +25,7 @@ const usuariosCreate = (req, res) => {
         if (usuarios.nombre && usuarios.apellidos) {
             usuarios.save()
                 .then(() => {
+                    enviarCorreoBienvenida(usuarios.nombre, usuarios.correos);  
                     res.status(201);
                     res.header({
                         'location': `/usuarios/?id=${usuarios.id}`
@@ -54,7 +41,7 @@ const usuariosCreate = (req, res) => {
                 });
         } else {
             res.status(422);
-            console.log('error while saving the user')
+            console.log('error while saving the user');
             res.json({
                 error: 'No valid data provided for user'
             });
@@ -73,24 +60,13 @@ function isAdult(nacimiento) {
     return age >= 18;
 }
 
-const usuariosGet = (args) => {
-    const { nombre } = args || {};  // Recibe 'nombre' de los argumentos
-    if (nombre) {
-        // Si se proporciona 'nombre', busca los usuarios con ese nombre
-        return usuarioModel.find({ nombre });
-    } else {
-        // Si no se proporciona 'nombre', devuelve todos los usuarios
-        return usuarioModel.find();
-    }
-};
-
 /**
- * Get all users
+ * Get all users or one by ID
+ * 
  * @param {*} req 
  * @param {*} res 
  */
-
-/*const usuariosGet = (req, res) => {
+const usuariosGet = (req, res) => {
     const id = req.params.id;
 
     if (id) {
@@ -122,20 +98,19 @@ const usuariosGet = (args) => {
                 console.log('Error al obtener los usuarios:', err);
             });
     }
-}*/
+};
+
 /**
- * Updates a usuarios
- *
+ * Updates a usuario
+ * 
  * @param {*} req
  * @param {*} res
  */
-
 const UsuarioUpdate = (req, res) => {
     if (req.query && req.query.id) {
         Usuarios.findById(req.query.id)
             .then(usuarios => {
                 if (usuarios) {
-                    // Update the usuarios fields
                     usuarios.nombre = req.body.nombre || usuarios.nombre;
                     usuarios.apellidos = req.body.apellidos || usuarios.apellidos;
                     usuarios.telefono = req.body.telefono || usuarios.telefono;
@@ -144,6 +119,7 @@ const UsuarioUpdate = (req, res) => {
                     usuarios.pais = req.body.pais || usuarios.pais;
                     usuarios.contraseña = req.body.contraseña || usuarios.contraseña;
                     usuarios.pin = req.body.pin || usuarios.pin;
+
                     usuarios.save()
                         .then(() => {
                             res.json(usuarios);
@@ -173,7 +149,7 @@ const UsuarioUpdate = (req, res) => {
 
 /**
  * Deletes a usuario
- *
+ * 
  * @param {*} req
  * @param {*} res
  */
@@ -201,7 +177,6 @@ const deleteUsuario = (req, res) => {
 
 module.exports = {
     usuariosCreate,
-    verificarCuenta,
     usuariosGet,
     UsuarioUpdate,
     deleteUsuario

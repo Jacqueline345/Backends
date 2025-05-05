@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
+require('dotenv').config();
 // database connection
 const mongoose = require("mongoose");
 const typeDefs = require('./graphql-schema'); // Importar el esquema GraphQL
@@ -380,7 +381,31 @@ const startServer = async () => {
     }
   });
 
-  //app.listen(3001, () => console.log(`Example app listening on port 3001!`))
+// Ruta para verificar correo electrónico
+app.get('/verificar-correo', async (req, res) => {
+  const token = req.query.token;
+
+  if (!token) {
+    return res.status(400).send('Token no proporcionado');
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secreto');
+    const usuario = await Usuario.findById(decoded.id);
+
+    if (!usuario) {
+      return res.status(404).send('Usuario no encontrado');
+    }
+
+    usuario.verificado = true;
+    await usuario.save();
+
+    res.send('Correo verificado con éxito. Ahora puedes iniciar sesión.');
+  } catch (error) {
+    console.error("Error al verificar el correo:", error);
+    res.status(400).send('Token inválido o expirado');
+  }
+});
 
   app.listen(3001, () => {
     console.log(`🚀 Servidor Express en http://localhost:3001`);
