@@ -1,5 +1,5 @@
 const videoModel = require('../model/videoModel');
-const { convertToEmbedUrl } = require('../js/functionsVideo');
+const { convertToEmbedUrl } = require('../js/functionVideo');
 
 /**
  * Create Video

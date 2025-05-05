@@ -1,6 +1,7 @@
 const Usuarios = require('../model/usuarioModel');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const { enviarCorreoBienvenida } = require('../js/email');
 
 /**
  * Creates a user
@@ -26,6 +27,7 @@ const usuariosCreate = (req, res) => {
         if (usuarios.nombre && usuarios.apellidos) {
             usuarios.save()
                 .then(() => {
+                    enviarCorreoBienvenida(usuarios.nombre, usuarios.correos);  
                     res.status(201);
                     res.header({
                         'location': `/usuarios/?id=${usuarios.id}`
@@ -48,14 +50,13 @@ const usuariosCreate = (req, res) => {
                 });
         } else {
             res.status(422);
-            console.log('error while saving the user')
+            console.log('error while saving the user');
             res.json({
                 error: 'No valid data provided for user'
             });
         }
     }
-}
-
+};
 
 function isAdult(nacimiento) {
     const today = new Date();
@@ -69,7 +70,8 @@ function isAdult(nacimiento) {
 }
 
 /**
- * Get all users
+ * Get all users or one by ID
+ * 
  * @param {*} req 
  * @param {*} res 
  */
@@ -105,20 +107,19 @@ const usuariosGet = (req, res) => {
                 console.log('Error al obtener los usuarios:', err);
             });
     }
-}
+};
+
 /**
- * Updates a usuarios
- *
+ * Updates a usuario
+ * 
  * @param {*} req
  * @param {*} res
  */
-
 const UsuarioUpdate = (req, res) => {
     if (req.query && req.query.id) {
         Usuarios.findById(req.query.id)
             .then(usuarios => {
                 if (usuarios) {
-                    // Update the usuarios fields
                     usuarios.nombre = req.body.nombre || usuarios.nombre;
                     usuarios.apellidos = req.body.apellidos || usuarios.apellidos;
                     usuarios.telefono = req.body.telefono || usuarios.telefono;
@@ -127,6 +128,7 @@ const UsuarioUpdate = (req, res) => {
                     usuarios.pais = req.body.pais || usuarios.pais;
                     usuarios.contraseña = req.body.contraseña || usuarios.contraseña;
                     usuarios.pin = req.body.pin || usuarios.pin;
+
                     usuarios.save()
                         .then(() => {
                             res.json(usuarios);
@@ -156,7 +158,7 @@ const UsuarioUpdate = (req, res) => {
 
 /**
  * Deletes a usuario
- *
+ * 
  * @param {*} req
  * @param {*} res
  */

@@ -28,7 +28,7 @@ const usuarios = new mongoose.Schema({
         required: true
     },
     pin: {
-        type: String,
+        type: Number,
         required: true,
         minlength: 6 
     },
