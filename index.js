@@ -1,8 +1,8 @@
 require('dotenv').config({ path: './Twilio/.env' }); // Carga el archivo .env desde la carpeta TWILIO
-const Usuario = require('./model/usuarioModel'); // Asegúrate de ajustar la ruta
-const playlistModel = require('./model/playlist');
-const Video = require('./model/videoModel');
-const restringido = require('./model/restringidoModel');
+const Usuario = require('./Graphql/model/usuarioModel'); // Asegúrate de ajustar la ruta
+const playlistModel = require('./Graphql/model/playlist');
+const Video = require('./Graphql/model/videoModel');
+const restringido = require('./Graphql/model/restringidoModel');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -15,8 +15,8 @@ const path = require('path');
 require('dotenv').config();
 // database connection
 const mongoose = require("mongoose");
-const typeDefs = require('./graphql-schema'); // Importar el esquema GraphQL
-const resolvers = require('./resolvers'); // Importar los resolvers
+const typeDefs = require('./Graphql/graphql-schema'); // Importar el esquema GraphQL
+const resolvers = require('./Graphql/resolvers'); // Importar los resolvers
 const { verificarCodigo } = require('./controllers/codigoController');
 const app = express();
 
@@ -38,7 +38,7 @@ const startServer = async () => {
   const bodyParser = require("body-parser");
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(sessión({ secret: 'mi_secreto', resave: false, saveUninitialized: true }));
+  app.use(sessión({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
 
 
   // check for cors
@@ -86,14 +86,14 @@ const startServer = async () => {
   app.use(express.static(path.join(__dirname, '../Frontend')));
   const { usuariosCreate, usuariosGet, UsuarioUpdate, deleteUsuario, } = require('./controllers/usuarioController');
   const { loginUsuario, logoutUsuario, validateAdminPin } = require('./controllers/authController');
-  const usuarioModel = require('./model/usuarioModel');
+  const usuarioModel = require('./Graphql/model/usuarioModel');
   const { restringidoCreate, restringidoGet, restringidoUpdate, restringidoDelete } = require('./controllers/restringidoController');
-  const restringidoModel = require('./model/restringidoModel');
+  const restringidoModel = require('./Graphql/model/restringidoModel');
   const { verificarCodigo } = require('./controllers/codigoController');
   const { playlistCreate, playlistGet, playlistUpdate, playlistDelete } = require('./controllers/playlistController');
   const { createVideo, updateVideo, deleteVideo, getVideo } = require('./controllers/videoController');
-  const playlist = require('./model/playlist');
-  const videoModel = require('./model/videoModel');
+  const playlist = require('./Graphql/model/playlist');
+  const videoModel = require('./Graphql/model/videoModel');
   app.post('/usuarios', usuariosCreate);
   app.get('/usuarios', usuariosGet);
   app.patch('/usuarios', UsuarioUpdate);

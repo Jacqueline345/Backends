@@ -1,5 +1,4 @@
-const playlistModel = require('../model/playlist');
-
+const playlistModel = require('../Graphql/model/playlist');
 /**
  * Creates a playlist
  * 
@@ -12,22 +11,22 @@ const playlistCreate = (req, res) => {
     playlist.nombre_playlist = req.body.nombre_playlist;
     playlist.perfiles_asociados = req.body.perfiles_asociados;
 
-    if(playlist.nombre_playlist) {
+    if (playlist.nombre_playlist) {
         playlist.save()
-        .then(() => {
-            res.status(201);
-            res.header({
-                'location': `/playlist/?id=${playlist.id}`
+            .then(() => {
+                res.status(201);
+                res.header({
+                    'location': `/playlist/?id=${playlist.id}`
+                });
+                res.json(playlist);
+            })
+            .catch((err) => {
+                res.status(422);
+                console.log('error while saving the playlist', err);
+                res.json({
+                    error: 'There was an error saving the playlist'
+                });
             });
-            res.json(playlist);
-        })
-        .catch((err) => {
-            res.status(422);
-            console.log('error while saving the playlist', err);
-            res.json({
-                error: 'There was an error saving the playlist'
-            });
-        });
     } else {
         res.status(422);
         console.log('error while saving the playlist')

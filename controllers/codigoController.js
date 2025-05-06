@@ -1,4 +1,4 @@
-Usuario = require('../model/usuarioModel');
+const Usuario = require('../Graphql/model/usuarioModel')
 const jwt = require('jsonwebtoken');
 
 async function verificarCodigo(req, res) {

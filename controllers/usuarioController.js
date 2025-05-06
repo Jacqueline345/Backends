@@ -1,4 +1,4 @@
-const Usuarios = require('../model/usuarioModel');
+const Usuarios = require('../Graphql/model/usuarioModel');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { enviarCorreoBienvenida } = require('../js/email');

@@ -1,4 +1,4 @@
-const usuarioModel = require("../model/usuarioModel");
+const usuarioModel = require('../Graphql/model/usuarioModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 

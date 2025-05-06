@@ -1,5 +1,4 @@
-const restringidos = require('../model/restringidoModel');
-
+const restringidos = require('../Graphql/model/restringidoModel');
 /**
  * Creates a user restringido
  * 

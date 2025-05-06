@@ -1,4 +1,4 @@
-const videoModel = require('../model/videoModel');
+const videoModel = require('../Graphql/model/videoModel');
 const { convertToEmbedUrl } = require('../js/functionVideo');
 
 /**

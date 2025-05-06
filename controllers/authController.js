@@ -1,4 +1,4 @@
-const usuarioModel = require("../model/usuarioModel");
+const usuarioModel = require('../Graphql/model/usuarioModel'); // Cambiar a path.join para evitar problemas de ruta
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const twilio = require('twilio');

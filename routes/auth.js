@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-const Usuario = require('../model/usuarioModel');
+const Usuario = require ('../Graphql/model/usuarioModel');
 const { sendVerificationEmail } = require('../controllers/emailController');
 
 // Ruta para iniciar autenticación con Google
