@@ -422,6 +422,21 @@ const startServer = async () => {
     }
   });
 
+  // Registro con Google
+  const passport = require('passport');
+  require('./js/passport');
+  const authRoute = require('./routes/auth');
+
+  app.use(session({
+    secret: 'secretKey',
+    resave: false,
+    saveUninitialized: false
+  }));
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use('/auth', authRoute);
+
   app.listen(3001, () => {
     console.log(`🚀 Servidor Express en http://localhost:3001`);
     console.log(`📡 Endpoint GraphQL en http://localhost:3001${server.graphqlPath}`);
