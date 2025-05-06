@@ -1,4 +1,5 @@
 require('dotenv').config({ path: './Twilio/.env' }); // Carga el archivo .env desde la carpeta TWILIO
+const { mergeTypeDefs } = require('@graphql-tools/merge');
 const Usuario = require('./Graphql/model/usuarioModel'); // Asegúrate de ajustar la ruta
 const playlistModel = require('./Graphql/model/playlist');
 const Video = require('./Graphql/model/videoModel');
@@ -15,10 +16,15 @@ const path = require('path');
 require('dotenv').config();
 // database connection
 const mongoose = require("mongoose");
-const typeDefs = require('./Graphql/graphql-schema'); // Importar el esquema GraphQL
+const graphql = require('./Graphql/graphql-schema'); // Importar el esquema GraphQL
+const play = require('./Graphql/playlist-schema');
+const video = require('./Graphql/videos-schema');
+const rest= require('./Graphql/restringido-schema');
 const resolvers = require('./Graphql/resolvers'); // Importar los resolvers
 const { verificarCodigo } = require('./controllers/codigoController');
 const app = express();
+
+const typeDefs = mergeTypeDefs([play, video, rest, graphql]); // Combina los esquemas GraphQL
 
 const startServer = async () => {
   await mongoose.connect("mongodb://127.0.0.1:27017/KidsTube", {

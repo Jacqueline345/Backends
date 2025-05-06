@@ -1,5 +1,5 @@
 const { gql } = require('apollo-server-express');
-const videos = gql`
+const vid = gql`
     type Query {
         getAllVideos: [videos]
         searchVideos(title: String): [videos]
@@ -11,4 +11,4 @@ const videos = gql`
         playlistId: ID
     }
 `;
-module.exports = videos;
+module.exports = vid;

@@ -3,6 +3,7 @@ const Usuario = require('./model/usuarioModel');
 const playlist = require('./model/playlist');
 const videoModel = require('./model/videoModel');
 const restringido = require('./model/restringidoModel');
+const { search } = require('../routes/auth');
 
 
 const resolvers = {
@@ -46,7 +47,7 @@ const resolvers = {
         throw new Error('No se pudo obtener el usuario');
       }
     },
-    getAllPlaylists: async () => {
+    getAllPlaylist: async () => {
       try {
         // Obtener todas las playlist
         const playlists = await playlist.find();;
@@ -60,13 +61,28 @@ const resolvers = {
       try {
         // Obtener todos los videos
         const videos = await videoModel.find();;
-        return video;
+        return videos;
       } catch (error) {
         console.error('Error al obtener los videos:', error);
         throw new Error('No se pudieron obtener los videos');
       }
     },
-    getAllRestrigidos: async () => {
+    searchVideos: async (_, { title }) => {
+      try {
+        const videos = await videoModel.find({
+          $or: [
+            { titulo: { $regex: title, $options: 'i' } },
+            { descripcion: { $regex: title, $options: 'i' } }
+          ]
+        });
+        return videos;
+      } catch (error) {
+        console.error('Error al buscar videos:', error);
+        throw new Error('No se pudieron buscar los videos');
+      }
+    },
+
+    getAllRestringidos: async () => {
       try {
         // Obtener todos los restringidos
         const restringidos = await restringido.find();;

@@ -1,5 +1,5 @@
 const { gql } = require('apollo-server-express');
-const restringidos = gql`
+const rest = gql`
     type Query {
         getAllRestringidos: [restringidos],
     }
@@ -11,4 +11,4 @@ const restringidos = gql`
         avatar: String,
     }
 `;
-module.exports = restringidos;
+module.exports = rest;
