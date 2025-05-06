@@ -3,6 +3,7 @@ const passport = require('passport');
 const router = express.Router();
 const Usuario = require ('../Graphql/model/usuarioModel');
 const { sendVerificationEmail } = require('../controllers/emailController');
+const jwt = require('jsonwebtoken');
 
 // Ruta para iniciar autenticación con Google
 router.get('/google',
@@ -43,7 +44,11 @@ router.post('/google/complete-registration/:googleId', async (req, res) => {
     usuario.pin = pin;
 
     await usuario.save();
-    await sendVerificationEmail(usuario.correos, usuario.nombre, usuario._id);
+    // Generar el token de verificación
+    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    // Enviar el correo con el token
+    await sendVerificationEmail(correos, nombre, token);
 
     res.json({ success: true });
 
@@ -53,30 +58,51 @@ router.post('/google/complete-registration/:googleId', async (req, res) => {
   }
 });
 
-// Ruta para verificar el correo y activar la cuenta
-router.get('/verify-email/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
+// Ruta: GET /auth/verify-email/:token
+router.get('/verify-email/:token', async (req, res) => {
+    const { token } = req.params;
+    console.log('Token recibido: ', token);
 
-    const usuario = await Usuario.findById(id);
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+        const usuario = await Usuario.findById(decoded.id);
 
-    if (!usuario) {
-      return res.status(404).send('Usuario no encontrado');
+        if (!usuario) {
+            return res.status(404).send('Usuario no encontrado');
+        }
+
+        if (usuario.estado !== 'activo') {
+            usuario.estado = 'activo';
+            await usuario.save();
+        }
+
+        // Redirige a la vista de éxito
+        res.redirect('/verificado.html');
+
+    } catch (error) {
+        console.error('Error al verificar el correo:', error.message);
+        res.status(400).send('Token inválido o expirado');
     }
-
-    if (usuario.activo) {
-      return res.send('Tu cuenta ya fue verificada. Puedes iniciar sesión.');
-    }
-
-    usuario.activo = true;
-    await usuario.save();
-
-    res.redirect('/login.html'); // Redirige a la pantalla de login
-
-  } catch (error) {
-    console.error('Error al verificar el correo:', error);
-    res.status(500).send('Error al verificar el correo');
-  }
 });
+
+// Ruta para login con Google (si ya está registrado y activo)
+router.get('/google/login-success',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  async (req, res) => {
+    const { googleId } = req.user;
+
+    const usuario = await Usuario.findOne({ googleId });
+
+    if (!usuario || usuario.estado !== 'activo') {
+      return res.redirect('/noAutorizado.html'); // Puedes crear esta vista
+    }
+
+    // Generar token JWT
+    const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    // Redirigir al frontend con el token como parámetro
+    res.redirect(`/googleLoginSuccess.html?token=${token}&nombre=${encodeURIComponent(usuario.nombre)}`);
+  }
+);
 
 module.exports = router;

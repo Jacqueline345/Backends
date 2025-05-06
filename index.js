@@ -437,6 +437,7 @@ const startServer = async () => {
   app.use(passport.session());
   app.use('/auth', authRoute);
 
+  app.use(express.static(path.join(__dirname, '../Frontend')));
   app.listen(3001, () => {
     console.log(`🚀 Servidor Express en http://localhost:3001`);
     console.log(`📡 Endpoint GraphQL en http://localhost:3001${server.graphqlPath}`);

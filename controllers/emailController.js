@@ -8,10 +8,15 @@ apiKey.apiKey = process.env.BREVO_API_KEY;
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 const sendVerificationEmail = async (email, nombre, token) => {
+    console.log('Email: ', email);
+    console.log('nombre: ', nombre);
+    console.log('Token: ', token);
+    
+
     const verificationUrl = `http://localhost:3001/auth/verify-email/${token}`;
 
     const emailData = {
-        sender: { name: 'KidsTube', email: 'TU_CORREO_REMITE@gmail.com' },
+        sender: { name: 'KidsTube', email: 'andrepaobena@gmail.com' },
         to: [{ email: email, name: nombre }],
         subject: 'Verifica tu cuenta en KidsTube',
         htmlContent: `
