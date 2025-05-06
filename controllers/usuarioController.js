@@ -1,7 +1,7 @@
 const Usuarios = require('../model/usuarioModel');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const { enviarCorreoBienvenida } = require('../js/email');
+const { sendVerificationEmail } = require('../controllers/emailController');
 
 /**
  * Creates a user
@@ -27,13 +27,16 @@ const usuariosCreate = (req, res) => {
         if (usuarios.nombre && usuarios.apellidos) {
             usuarios.save()
                 .then(() => {
-                    enviarCorreoBienvenida(usuarios.nombre, usuarios.correos);  
+                      
                     res.status(201);
                     res.header({
                         'location': `/usuarios/?id=${usuarios.id}`
                     });
                     const SECRET_KEY = process.env.JWT_SECRET
                     const token = jwt.sign({ id: usuarios._id }, SECRET_KEY, { expiresIn: '1h' });
+                    //enviar correo
+                    sendVerificationEmail(usuarios.correos, usuarios.nombre, token);
+
                     res.status(200).json({
                         message: 'Usuario creado exitosamente',
                         token,
