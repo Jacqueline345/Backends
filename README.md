@@ -46,6 +46,12 @@ Para comenzar a trabajar con este proyecto, sigue estos pasos:
 4. **Iniciar el Servidor**:
     - npm start
 
+## Arquitectura del Sisitema
+----------------------
+
+![Diagrama de Arquitectura](./arquitectura-kitstube.png)
+Este diagrama representa la arquitectura del sistema KidsTube. Muestra la interacción entre el frontend (vistas HTML), el backend (API REST), la base de datos MongoDB y los servicios externos como Google, Brevo y Twilio.
+
 ## Estado del Proyecto
 ----------------------
 Este proyecto está en desarrollo activo.
